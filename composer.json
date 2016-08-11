@@ -1,0 +1,22 @@
+{
+    "name": "ehackers/ewallet",
+    "description": "Monedero electronico",
+    "type": "application",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luis Montealegre",
+            "email": "montealegreluis@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Ewallet\\": "src/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "behat/behat": "^3.1",
+        "phpspec/phpspec": "^3.0"
+    }
+}

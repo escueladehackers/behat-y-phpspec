@@ -1,0 +1,7 @@
+formatter.name: pretty
+suites:
+    default:
+        spec_prefix: specs
+        spec_path: tests
+        namespace: Ewallet
+        psr4_prefix: Ewallet
