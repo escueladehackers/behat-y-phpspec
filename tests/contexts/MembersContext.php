@@ -69,14 +69,7 @@ class MembersContext implements Context, SnippetAcceptingContext
     public function myBalanceShouldBeMxn(Money $amount)
     {
         $my = $this->members->with($this->i->id());
-        assertTrue(
-            $my->accountBalance()->equals($amount),
-            sprintf(
-                'Final balance does not match, expecting %d, found %d',
-                $amount->getAmount(),
-                $this->i->accountBalance()->getAmount()
-            )
-        );
+        $this->assertAmountsAreEqual($amount, $my->accountBalance());
     }
 
     /**
@@ -85,12 +78,22 @@ class MembersContext implements Context, SnippetAcceptingContext
     public function myFriendSBalanceShouldBeMxn(Money $amount)
     {
         $myFriend = $this->members->with($this->myFriend->id());
+        $this->assertAmountsAreEqual($amount, $myFriend->accountBalance());
+    }
+
+    /**
+     * @param Money $expectedAmount
+     * @param Money $actualAmount
+     */
+    private function assertAmountsAreEqual(Money $expectedAmount, Money $actualAmount)
+    {
         assertTrue(
-            $myFriend->accountBalance()->equals($amount),
+            $actualAmount->equals($expectedAmount),
             sprintf(
-                'Final balance does not match, expecting %d, found %d',
-                $amount->getAmount(),
-                $this->myFriend->accountBalance()->getAmount()
-        ));
+                'Final balance does not match, expecting %.2f, found %.2f',
+                $expectedAmount->getAmount() / 100,
+                $actualAmount->getAmount() / 100
+            )
+        );
     }
 }
