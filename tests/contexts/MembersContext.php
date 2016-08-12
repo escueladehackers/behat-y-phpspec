@@ -70,9 +70,11 @@ class MembersContext implements Context, SnippetAcceptingContext
     {
         $my = $this->members->with($this->i->id());
         if (!$my->accountBalance()->equals($amount)) {
-            throw new RuntimeException(
-                "Final balance does not match, expecting {$amount->getAmount()}, found {$this->i->accountBalance()->getAmount()}"
-            );
+            throw new RuntimeException(sprintf(
+                'Final balance does not match, expecting %d, found %d',
+                $amount->getAmount(),
+                $this->i->accountBalance()->getAmount()
+            ));
         }
     }
 
@@ -83,9 +85,11 @@ class MembersContext implements Context, SnippetAcceptingContext
     {
         $myFriend = $this->members->with($this->myFriend->id());
         if (!$myFriend->accountBalance()->equals($amount)) {
-            throw new RuntimeException(
-                "Final balance does not match, expecting {$amount->getAmount()}, found {$this->myFriend->accountBalance()->getAmount()}"
-            );
+            throw new RuntimeException(sprintf(
+                'Final balance does not match, expecting %d, found %d',
+                $amount->getAmount(),
+                $this->myFriend->accountBalance()->getAmount()
+            ));
         }
     }
 }
