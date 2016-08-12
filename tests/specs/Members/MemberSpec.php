@@ -14,7 +14,7 @@ class MemberSpec extends ObjectBehavior
 
         // then
         $this->id()->shouldBe(1);
-        $this->accountBalance()->getAmount()->shouldBe(5000);
+        $this->accountBalance()->equals(Money::MXN(5000))->shouldBe(true);
     }
 
     function it_transfer_funds_to_a_recipient()
@@ -27,7 +27,7 @@ class MemberSpec extends ObjectBehavior
         $this->transfer($myFriend, Money::MXN(2000));
 
         // Then
-        $this->accountBalance()->getAmount()->shouldBe(3000);
+        $this->accountBalance()->equals(Money::MXN(3000))->shouldBe(true);
     }
 
     function it_receives_funds_from_a_sender()
@@ -40,15 +40,15 @@ class MemberSpec extends ObjectBehavior
         $myFriend->transfer($this->getWrappedObject(), Money::MXN(2000));
 
         // Then
-        $this->accountBalance()->getAmount()->shouldBe(6000);
+        $this->accountBalance()->equals(Money::MXN(6000))->shouldBe(true);
     }
 
     function it_knows_when_it_is_equal_to_another_member()
     {
         // Given
         $this->beConstructedThrough('withAccountBalance', [1, Money::MXN(4000)]);
-        $me = Member::withAccountBalance(1, Money::MXN(4000));
+        $myself = Member::withAccountBalance(1, Money::MXN(4000));
 
-        $this->equals($me)->shouldBe(true);
+        $this->equals($myself)->shouldBe(true);
     }
 }
