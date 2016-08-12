@@ -1,0 +1,9 @@
+Money\Money (local):
+    balance{1..2}:
+        amount: '<numberBetween(100, 10000)>'
+        currency: 'MXN'
+
+Ewallet\Members\Member:
+    member{1..2}:
+        memberId: '<current()>'
+        balance: '@balance<current()>'

@@ -1,8 +1,6 @@
 <?php
 use Behat\Behat\Context\{Context, SnippetAcceptingContext};
-use Ewallet\Members\InMemoryMembers;
-use Ewallet\Members\Member;
-use Ewallet\Members\Members;
+use Ewallet\Members\{InMemoryMembers, Member, Members};
 use Money\Money;
 
 /**
@@ -10,6 +8,8 @@ use Money\Money;
  */
 class MembersContext implements Context, SnippetAcceptingContext
 {
+    use MembersDictionary;
+
     /** @var Member */
     private $i;
 
@@ -91,13 +91,5 @@ class MembersContext implements Context, SnippetAcceptingContext
                 "Final balance does not match, expecting {$amount->getAmount()}, found {$this->myFriend->accountBalance()->getAmount()}"
             );
         }
-    }
-
-    /**
-     * @Transform :amount
-     */
-    public function convertFromStringToMoney($amount): Money
-    {
-        return Money::MXN($amount * 100);
     }
 }
