@@ -1,30 +1,46 @@
 <?php
 namespace Ewallet\Members;
 
+use Money\Money;
+
 class Member
 {
-    /** @var int */
+    /** @var Money */
     private $balance;
 
-    private function __construct(int $balance)
+    /** @var int */
+    private $memberId;
+
+    private function __construct(int $memberId, Money $balance)
     {
         $this->balance = $balance;
+        $this->memberId = $memberId;
     }
 
-    public static function withAccountBalance(int $balance): Member
+    public static function withAccountBalance(int $memberId, Money $balance): Member
     {
-        return new Member($balance);
+        return new Member($memberId, $balance);
     }
 
-    public function accountBalance(): int
+    public function id(): int
+    {
+        return $this->memberId;
+    }
+
+    public function accountBalance(): Money
     {
         return $this->balance;
     }
 
     // sender
-    public function transfer(Member $recipient, int $amount)
+    public function transfer(Member $recipient, Money $amount)
     {
-        $this->balance -= $amount;
-        $recipient->balance += $amount; //recipient
+        $this->balance = $this->balance->subtract($amount);
+        $recipient->balance = $recipient->balance->add($amount); //recipient
+    }
+
+    public function equals(Member $aMember): bool
+    {
+        return $this->memberId === $aMember->memberId;
     }
 }

@@ -1,18 +1,23 @@
 <?php
-use Behat\Behat\Tester\Exception\PendingException;
-use Behat\Behat\Context\Context;
-use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Context\{Context, SnippetAcceptingContext};
+use Ewallet\Members\InMemoryMembers;
 use Ewallet\Members\Member;
+use Ewallet\Members\Members;
+use Money\Money;
 
 /**
  * Defines application features from the specific context.
  */
 class MembersContext implements Context, SnippetAcceptingContext
 {
+    /** @var Member */
     private $i;
+
+    /** @var Member */
     private $myFriend;
+
+    /** @var Members */
+    private $members;
 
     /**
      * Initializes context.
@@ -23,30 +28,35 @@ class MembersContext implements Context, SnippetAcceptingContext
      */
     public function __construct()
     {
+        $this->members = new InMemoryMembers();
     }
 
     /**
      * @Given I'm a member with an account balance of :amount MXN
      */
-    public function iMAMemberWithAnAccountBalanceOfMxn($amount)
+    public function iMAMemberWithAnAccountBalanceOfMxn(Money $amount)
     {
-        $this->i = Member::withAccountBalance($amount);
+        $this->i = Member::withAccountBalance(1, $amount);
+        $this->members->add($this->i);
     }
 
     /**
      * @Given my friend has an account balance of :amount MXN
      */
-    public function myFriendHasAnAccountBalanceOfMxn($amount)
+    public function myFriendHasAnAccountBalanceOfMxn(Money $amount)
     {
-        $this->myFriend = Member::withAccountBalance($amount);
+        $this->myFriend = Member::withAccountBalance(2, $amount);
+        $this->members->add($this->myFriend);
     }
 
     /**
      * @When I transfer him :amount MXN
      */
-    public function iTransferHimMxn($amount)
+    public function iTransferHimMxn(Money $amount)
     {
         $this->i->transfer($this->myFriend, $amount);
+        $this->members->update($this->i);
+        $this->members->update($this->myFriend);
     }
 
     /**
@@ -60,20 +70,34 @@ class MembersContext implements Context, SnippetAcceptingContext
     /**
      * @Then my balance should be :amount MXN
      */
-    public function myBalanceShouldBeMxn($amount)
+    public function myBalanceShouldBeMxn(Money $amount)
     {
-        if ($this->i->accountBalance() != $amount) {
-            throw new RuntimeException("Final balance does not match, expecting $amount");
+        $my = $this->members->with($this->i->id());
+        if (!$my->accountBalance()->equals($amount)) {
+            throw new RuntimeException(
+                "Final balance does not match, expecting {$amount->getAmount()}, found {$this->i->accountBalance()->getAmount()}"
+            );
         }
     }
 
     /**
      * @Then my friend's balance should be :amount MXN
      */
-    public function myFriendSBalanceShouldBeMxn($amount)
+    public function myFriendSBalanceShouldBeMxn(Money $amount)
     {
-        if ($this->myFriend->accountBalance() != $amount) {
-            throw new RuntimeException("Final balance does not match, expecting $amount");
+        $myFriend = $this->members->with($this->myFriend->id());
+        if (!$myFriend->accountBalance()->equals($amount)) {
+            throw new RuntimeException(
+                "Final balance does not match, expecting {$amount->getAmount()}, found {$this->myFriend->accountBalance()->getAmount()}"
+            );
         }
+    }
+
+    /**
+     * @Transform :amount
+     */
+    public function convertFromStringToMoney($amount): Money
+    {
+        return Money::MXN($amount * 100);
     }
 }
