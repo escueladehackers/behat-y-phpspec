@@ -49,6 +49,17 @@ class MemberSpec extends ObjectBehavior
         $this->beConstructedThrough('withAccountBalance', [1, Money::MXN(4000)]);
         $myself = Member::withAccountBalance(1, Money::MXN(4000));
 
+        // When - Then
         $this->equals($myself)->shouldBe(true);
+    }
+
+    function it_knows_when_it_is_not_equal_to_another_member()
+    {
+        // Given
+        $this->beConstructedThrough('withAccountBalance', [1, Money::MXN(4000)]);
+        $anotherMember = Member::withAccountBalance(2, Money::MXN(3000));
+
+        // When - Then
+        $this->equals($anotherMember)->shouldBe(false);
     }
 }
