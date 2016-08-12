@@ -1,7 +1,7 @@
 {
     "name": "ehackers/ewallet",
-    "description": "Monedero electronico",
-    "type": "application",
+    "description": "Monedero electrónico",
+    "type": "project",
     "license": "MIT",
     "authors": [
         {
