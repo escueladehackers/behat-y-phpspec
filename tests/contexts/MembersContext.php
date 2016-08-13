@@ -1,5 +1,6 @@
 <?php
 use Behat\Behat\Context\{Context, SnippetAcceptingContext};
+use Ewallet\ManageWallet\TransferFunds;
 use Ewallet\Members\{InMemoryMembers, Member, Members};
 use Money\Money;
 
@@ -10,14 +11,17 @@ class MembersContext implements Context, SnippetAcceptingContext
 {
     use MembersDictionary;
 
-    /** @var Member */
-    private $i;
+    /** @var int */
+    private $senderId = 1;
 
-    /** @var Member */
-    private $myFriend;
+    /** @var int */
+    private $recipientId = 2;
 
     /** @var Members */
     private $members;
+
+    /** @var TransferFunds */
+    private $action;
 
     /**
      * Initializes context.
@@ -25,6 +29,7 @@ class MembersContext implements Context, SnippetAcceptingContext
     public function __construct()
     {
         $this->members = new InMemoryMembers();
+        $this->action = new TransferFunds($this->members);
     }
 
     /**
@@ -32,8 +37,7 @@ class MembersContext implements Context, SnippetAcceptingContext
      */
     public function iMAMemberWithAnAccountBalanceOfMxn(Money $amount)
     {
-        $this->i = Member::withAccountBalance(1, $amount);
-        $this->members->add($this->i);
+        $this->members->add(Member::withAccountBalance($this->senderId, $amount));
     }
 
     /**
@@ -41,8 +45,7 @@ class MembersContext implements Context, SnippetAcceptingContext
      */
     public function myFriendHasAnAccountBalanceOfMxn(Money $amount)
     {
-        $this->myFriend = Member::withAccountBalance(2, $amount);
-        $this->members->add($this->myFriend);
+        $this->members->add(Member::withAccountBalance($this->recipientId, $amount));
     }
 
     /**
@@ -50,9 +53,7 @@ class MembersContext implements Context, SnippetAcceptingContext
      */
     public function iTransferHimMxn(Money $amount)
     {
-        $this->i->transfer($this->myFriend, $amount);
-        $this->members->update($this->i);
-        $this->members->update($this->myFriend);
+        $this->action->transfer($this->senderId, $this->recipientId, $amount);
     }
 
     /**
@@ -68,7 +69,7 @@ class MembersContext implements Context, SnippetAcceptingContext
      */
     public function myBalanceShouldBeMxn(Money $amount)
     {
-        $my = $this->members->with($this->i->id());
+        $my = $this->members->with($this->senderId);
         $this->assertAmountsAreEqual($amount, $my->accountBalance());
     }
 
@@ -77,7 +78,7 @@ class MembersContext implements Context, SnippetAcceptingContext
      */
     public function myFriendSBalanceShouldBeMxn(Money $amount)
     {
-        $myFriend = $this->members->with($this->myFriend->id());
+        $myFriend = $this->members->with($this->recipientId);
         $this->assertAmountsAreEqual($amount, $myFriend->accountBalance());
     }
 
