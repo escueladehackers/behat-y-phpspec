@@ -2,6 +2,7 @@
 namespace Ewallet\ManageWallet;
 
 use Ewallet\Members\Members;
+use Ewallet\Members\TransferFundsSummary;
 use Money\Money;
 
 class TransferFunds
@@ -25,5 +26,7 @@ class TransferFunds
 
         $this->members->update($sender);
         $this->members->update($recipient);
+
+        return new TransferFundsSummary($sender, $recipient);
     }
 }

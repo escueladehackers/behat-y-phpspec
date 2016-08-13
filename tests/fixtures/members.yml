@@ -1,9 +1,16 @@
+Money\Currency (local):
+    mxn:
+        __construct: false
+        name: MXN
+
 Money\Money (local):
     balance{1..2}:
+        __construct: false
         amount: '<numberBetween(100, 10000)>'
-        currency: 'MXN'
+        currency: '@mxn'
 
 Ewallet\Members\Member:
     member{1..2}:
+        __construct: false
         memberId: '<current()>'
         balance: '@balance<current()>'

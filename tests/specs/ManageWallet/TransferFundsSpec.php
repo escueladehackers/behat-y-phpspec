@@ -29,6 +29,9 @@ class TransferFundsSpec extends ObjectBehavior
         $members->update($recipient)->shouldBeCalled();
         $this->beConstructedWith($members);
 
-        $this->transfer($senderId, $recipientId, $amount);
+        $summary = $this->transfer($senderId, $recipientId, $amount);
+
+        $summary->sender()->equals($sender)->shouldBe(true);
+        $summary->recipient()->equals($recipient)->shouldBe(true);
     }
 }

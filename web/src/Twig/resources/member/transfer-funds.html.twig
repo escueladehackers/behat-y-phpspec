@@ -1,0 +1,45 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    {% if sender is defined and sender is not null and recipient is defined and recipient is not null %}
+        <div
+            id="transfer-message"
+            class="alert alert-success alert-dismissible"
+            role="alert"
+        >
+            <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+            >
+                <span aria-hidden="true">&times;</span>
+            </button>
+            Your beneficiary summary is ${{ (recipient.accountBalance().getAmount() / 100)|number_format(2, '.', ',')  }} <br>
+            Your summary is ${{ (sender.accountBalance().getAmount() / 100)|number_format(2, '.', ',')  }}
+        </div>
+    {% endif %}
+
+    <form action="/transfer-funds" method="post">
+        <div class="form-group">
+            <label for="recipientId">Transfer to</label>
+            <input
+                type="text"
+                class="form-control"
+                name="recipientId"
+                id="recipientId">
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input
+                type="text"
+                class="form-control"
+                name="amount"
+                id="amount">
+        </div>
+
+        <button type="submit" class="btn btn-default">
+            <span class="glyphicon glyphicon-share"></span> Transfer
+        </button>
+    </form>
+{% endblock %}
