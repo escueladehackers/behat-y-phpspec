@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Ewallet\\": "src/"
+            "Ewallet\\": ["src/", "infrastructure/"]
         }
     },
     "autoload-dev": {
@@ -23,7 +23,8 @@
         ]
     },
     "require": {
-        "mathiasverraes/money": "^1.3"
+        "mathiasverraes/money": "^1.3",
+        "doctrine/orm": "^2.5"
     },
     "require-dev": {
         "behat/behat": "^3.1",
