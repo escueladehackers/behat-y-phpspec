@@ -28,12 +28,12 @@ class RoboFile extends \Robo\Tasks
             ->run()
         ;
         $this
-            ->taskExec('php vendor/bin/codecept')
+            ->taskExec('php bin/codecept')
             ->arg('clean')
             ->run()
         ;
         $this
-            ->taskCodecept('vendor/bin/codecept')
+            ->taskCodecept('bin/codecept')
             ->suite('acceptance')
             ->option('steps')
             ->run()

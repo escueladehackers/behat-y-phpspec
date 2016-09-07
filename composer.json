@@ -22,6 +22,9 @@
             "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"
         ]
     },
+    "config": {
+        "bin-dir": "bin/"
+    },
     "require": {
         "mathiasverraes/money": "^1.3",
         "doctrine/orm": "^2.5",
